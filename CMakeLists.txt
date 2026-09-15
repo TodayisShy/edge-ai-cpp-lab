@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(edge-ai-cpp-lab
     src/main.cpp
+    src/Matrix.cpp
 )
 
 target_include_directories(edge-ai-cpp-lab PRIVATE
