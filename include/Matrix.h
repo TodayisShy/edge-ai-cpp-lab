@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <stdexcept>
+#include <memory>
 
 class Matrix {
 public:
@@ -47,4 +49,36 @@ private:
 
     // 内部边界检查辅助函数
     void check_bounds(int r, int c) const;
+};
+
+
+class MatrixManual{
+public:
+    explicit MatrixManual(int rows, int cols);
+    ~MatrixManual();
+
+    MatrixManual(const MatrixManual& other);
+    MatrixManual& operator=(const MatrixManual& other);
+
+private:
+    int rows_;
+    int cols_;
+    float* data_;
+};
+
+class MatrixUnique{
+public:
+    explicit MatrixUnique(int rows, int cols);
+    ~MatrixUnique();
+
+    MatrixUnique(const MatrixUnique& other) = delete; // 禁止拷贝构造
+    MatrixUnique& operator=(const MatrixUnique& other) = delete; // 禁止拷贝赋值
+
+    MatrixUnique(MatrixUnique&& other) noexcept; // 移动构造
+    MatrixUnique& operator=(MatrixUnique&& other) noexcept; // 移动赋值
+
+private:
+    int rows_;
+    int cols_;
+    std::unique_ptr<float[]> data_;
 };

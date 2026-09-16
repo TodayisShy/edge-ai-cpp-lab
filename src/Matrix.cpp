@@ -141,3 +141,43 @@ void Matrix::check_bounds(int r, int c) const{
     }
 }
 
+
+// ==========================================
+// MatrixManual 类的实现
+MatrixManual::MatrixManual(int rows, int cols)
+    : rows_(rows),
+      cols_(cols),
+      data_(new float[rows * cols]()) {
+    if (rows <= 0 || cols <= 0) {
+        throw std::invalid_argument("Matrix dimensions must be positive");
+    }
+}
+
+MatrixManual::~MatrixManual(){
+    delete[] data_;   // 核心使命：释放之前 new[] 分配的堆内存
+    data_ = nullptr;  // 置空指针，防止悬挂指针
+}
+
+MatrixManual::MatrixManual(const MatrixManual& other):
+    rows_(other.rows_), cols_(other.cols_), data_(new float[other.rows_ * other.cols_]){
+    std::copy(other.data_, other.data_ + (other.rows_ * other.cols_), data_);
+}
+
+MatrixManual& MatrixManual::operator=(const MatrixManual& other){
+    if(this == &other) return *this; // 自我赋值检查
+    // 释放旧内存
+    delete[] data_;
+    // 分配新内存并复制数据
+    rows_ = other.rows_;
+    cols_ = other.cols_;
+    data_ = new float[rows_ * cols_];
+    std::copy(other.data_, other.data_ + (rows_ * cols_), data_);
+    return *this;
+}
+
+MatrixUnique::MatrixUnique(int rows, int cols)
+    : rows_(rows), cols_(cols), data_(std::make_unique<float[]>(rows * cols)) {
+    if (rows <= 0 || cols <= 0) {
+        throw std::invalid_argument("Matrix dimensions must be positive");
+    }
+}
