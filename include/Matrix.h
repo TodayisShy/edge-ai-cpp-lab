@@ -15,6 +15,31 @@ public:
     float& operator()(int r, int c);
     const float& operator()(int r, int c) const;
 
+    // ==========================================
+    // 1. 复合赋值运算符（成员函数，返回 Matrix&）
+    // ==========================================
+    Matrix& operator+=(float scalar);
+    Matrix& operator-=(float scalar);
+    // 标量复合运算
+    Matrix& operator*=(float scalar);
+    Matrix& operator/=(float scalar);
+    // 矩阵乘法复合运算（注意：内部形状可能会改变）
+    Matrix& operator*=(const Matrix& rhs);
+    // ==========================================
+    // 2. 算术运算符（非成员 / 友元函数，按值返回 Matrix）
+    // ==========================================
+    // 矩阵与矩阵加减
+    friend Matrix operator+(const Matrix& lhs, const Matrix& rhs);
+    friend Matrix operator-(const Matrix& lhs, const Matrix& rhs);
+    // 矩阵与矩阵乘法（线性代数乘法）
+    friend Matrix operator*(const Matrix& lhs, const Matrix& rhs);
+    // 矩阵与标量乘法（必须支持双向交换律）
+    friend Matrix operator*(const Matrix& mat, double scalar);
+    friend Matrix operator*(double scalar, const Matrix& mat);
+    // 矩阵与标量除法
+    friend Matrix operator/(const Matrix& mat, double scalar);
+    
+
 private:
     int rows_;
     int cols_;
