@@ -144,6 +144,8 @@ void Matrix::check_bounds(int r, int c) const{
 
 // ==========================================
 // MatrixManual 类的实现
+// ==========================================
+
 MatrixManual::MatrixManual(int rows, int cols)
     : rows_(rows),
       cols_(cols),
@@ -175,9 +177,14 @@ MatrixManual& MatrixManual::operator=(const MatrixManual& other){
     return *this;
 }
 
+// ==========================================
+// MatrixUnique 类的实现
+// ==========================================
+
 MatrixUnique::MatrixUnique(int rows, int cols)
     : rows_(rows), cols_(cols), data_(std::make_unique<float[]>(rows * cols)) {
     if (rows <= 0 || cols <= 0) {
         throw std::invalid_argument("Matrix dimensions must be positive");
     }
 }
+
