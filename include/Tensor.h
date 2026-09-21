@@ -34,7 +34,7 @@ public:
     TensorBuffer& operator=(const TensorBuffer& other);
     TensorBuffer(TensorBuffer&& other) noexcept;
     TensorBuffer& operator=(TensorBuffer&& other) noexcept;
-    ~TensorBuffer() = default;
+    ~TensorBuffer();
 
     // 观察器 (Inspectors)
     size_t numel() const noexcept;
