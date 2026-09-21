@@ -1,5 +1,8 @@
 #include "Tensor.h"
 
+#include <algorithm>
+#include <utility>
+
 Tensor::Tensor(std::vector<int> shape) : shape_(std::move(shape)){
     if(shape_.empty()){
         throw std::invalid_argument("Tensor shape cannot be empty");
@@ -49,4 +52,122 @@ void Tensor::reshape(const std::vector<int>& new_shape){
     }
 
     shape_ = new_shape;
+}
+
+
+
+// ==========================================
+// TensorBuffer 类的实现
+// ==========================================
+
+TensorBuffer::TensorBuffer(const std::vector<int>& shape, const std::string& name)
+    :name_(name), shape_(shape){
+        size_t temp_numel = 1;
+        if(shape_.empty()){
+            throw std::invalid_argument("TensorBuffer shape cannot be empty");
+        }
+        for(auto dim : shape_){
+            if(dim <= 0){
+                throw std::invalid_argument("TensorBuffer dimensions must be positive");
+            }  
+            temp_numel *= static_cast<size_t>(dim);
+        }
+        numel_ = temp_numel;
+        data_  = std::make_unique<float[]>(numel_);
+}
+
+TensorBuffer::TensorBuffer(const TensorBuffer& other)
+    :name_(other.name_), shape_(other.shape_), numel_(other.numel_), 
+    data_(numel_ > 0 ? std::make_unique<float[]>(numel_) : nullptr) {
+    if(numel_ && data_){
+        std::copy(other.data_.get(), other.data_.get() + numel_, data_.get());
+    }
+}
+
+TensorBuffer& TensorBuffer::operator=(const TensorBuffer& other) {
+    if (this == &other) {
+        return *this;
+    }
+    // 1. 先开辟新内存，如果抛出异常，当前对象状态完全不受损
+    auto new_data = other.numel_ > 0 ? std::make_unique<float[]>(other.numel_) : nullptr;
+    if (new_data && other.data_) {
+        std::copy(other.data_.get(), other.data_.get() + other.numel_, new_data.get());
+    }
+    name_ = other.name_;
+    shape_ = other.shape_;
+    numel_ = other.numel_;
+    data_ = std::move(new_data);    
+    return *this;
+}
+
+TensorBuffer::TensorBuffer(TensorBuffer&& other) noexcept
+    :name_(std::move(other.name_)),
+    shape_(std::move(other.shape_)),
+    numel_(other.numel_),
+    data_(std::move(other.data_)){
+    other.numel_ = 0;
+}
+
+
+TensorBuffer& TensorBuffer::operator=(TensorBuffer&& other)noexcept{
+    if (this == &other) {
+        return *this;
+    }
+    name_ = std::move(other.name_);
+    shape_ = std::move(other.shape_);
+    numel_ = other.numel_;
+    data_ = std::move(other.data_);
+    other.numel_ = 0;
+    return *this;
+}
+
+size_t TensorBuffer::numel()const noexcept{
+    return numel_;
+}
+
+float* TensorBuffer::data() noexcept{
+    return data_.get();
+}
+
+const float* TensorBuffer::data() const noexcept{
+    return data_.get();
+}
+
+float& TensorBuffer::at(size_t index){
+    check_bounds(index);
+    return data_[index];
+}
+
+const float& TensorBuffer::at(size_t index) const{
+    check_bounds(index);
+    return data_[index];
+}
+
+void TensorBuffer::reshape(const std::vector<int>& new_shape){
+    if(new_shape.empty()){
+        throw std::invalid_argument("New shape cannot be empty");
+    }
+
+    size_t temp_numel = 1;
+    for(auto dim : new_shape){
+        if(dim <= 0){
+            throw std::invalid_argument("TensorBuffer dimensions must be positive");
+        }
+        temp_numel *= static_cast<size_t>(dim);
+    }
+    if(temp_numel != numel_){
+        throw std::invalid_argument("New shape must have the same number of elements as the original shape");
+    }
+
+    shape_ = new_shape;
+}
+
+void TensorBuffer::fill(float value) noexcept{
+    std::fill(data_.get(), data_.get() + numel_, value);
+}
+
+void TensorBuffer::check_bounds(size_t index) const{
+    if(index >= numel_){
+        throw std::out_of_range("Index out of bounds");
+    }
 }

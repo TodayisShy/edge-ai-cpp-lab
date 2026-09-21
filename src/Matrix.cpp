@@ -160,8 +160,8 @@ MatrixManual::~MatrixManual(){
     data_ = nullptr;  // 置空指针，防止悬挂指针
 }
 
-MatrixManual::MatrixManual(const MatrixManual& other):
-    rows_(other.rows_), cols_(other.cols_), data_(new float[other.rows_ * other.cols_]){
+MatrixManual::MatrixManual(const MatrixManual& other)
+    :rows_(other.rows_), cols_(other.cols_), data_(new float[other.rows_ * other.cols_]){
     std::copy(other.data_, other.data_ + (other.rows_ * other.cols_), data_);
 }
 
