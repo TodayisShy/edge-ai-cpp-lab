@@ -75,13 +75,15 @@ TensorBuffer::TensorBuffer(const std::vector<int>& shape, const std::string& nam
         }
         numel_ = temp_numel;
         data_  = std::make_unique<float[]>(numel_);
+        /*
         std::cout << "[CONSTRUCT]   '" << name_ << "' created (" 
             << numel_ << " floats, " 
             << (numel_ * sizeof(float)) / (1024.0 * 1024.0) << " MB)" << std::endl; 
+        */
 }
 
 TensorBuffer::~TensorBuffer(){
-    std::cout << "[DESTRUCT]  '" << name_ << "' destroyed." << std::endl;
+    // std::cout << "[DESTRUCT]  '" << name_ << "' destroyed." << std::endl;
 }
 
 TensorBuffer::TensorBuffer(const TensorBuffer& other)
@@ -90,8 +92,10 @@ TensorBuffer::TensorBuffer(const TensorBuffer& other)
     if(numel_ && data_){
         std::copy(other.data_.get(), other.data_.get() + numel_, data_.get());
     }
+    /*
     std::cout << "[COPY CTOR]   '" << other.name_ << "' -> '" << name_ 
               << "' (Deep copied " << numel_ << " floats)" << std::endl;
+    */          
 }
 
 TensorBuffer& TensorBuffer::operator=(const TensorBuffer& other) {
@@ -107,7 +111,9 @@ TensorBuffer& TensorBuffer::operator=(const TensorBuffer& other) {
     shape_ = other.shape_;
     numel_ = other.numel_;
     data_ = std::move(new_data);    
+    /*
     std::cout << "[COPY ASSIGN] '" << other.name_ << "' -> '" << name_ << "'\n"; 
+    */
     return *this;
 }
 
@@ -117,7 +123,9 @@ TensorBuffer::TensorBuffer(TensorBuffer&& other) noexcept
     numel_(other.numel_),
     data_(std::move(other.data_)){
     other.numel_ = 0;
+    /*
     std::cout << "[MOVE CTOR]   '" << other.name_ << "' -> '" << name_ << "' (Moved " << numel_ << " floats)" << std::endl;
+    */    
 }
 
 
@@ -130,7 +138,9 @@ TensorBuffer& TensorBuffer::operator=(TensorBuffer&& other)noexcept{
     numel_ = other.numel_;
     data_ = std::move(other.data_);
     other.numel_ = 0;
+    /*
     std::cout << "[MOVE ASSIGN] '" << other.name_ << "' -> '" << name_ << "' (Moved " << numel_ << " floats)" << std::endl;
+    */
     return *this;
 }
 

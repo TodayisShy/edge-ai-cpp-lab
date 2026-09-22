@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Matrix::Matrix(int rows, int cols) : rows_(rows), cols_(cols), data_(rows * cols, 0.0f) {
+Matrix::Matrix(int rows, int cols) : rows_(rows), cols_(cols), data_(rows * cols, 1.0f) {
     // 构造函数实现：初始化矩阵大小和数据
     if(rows <= 0 || cols <= 0){
         throw std::invalid_argument("Matrix dimensions must be positive");
