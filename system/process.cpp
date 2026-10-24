@@ -1,3 +1,5 @@
+//在linux系统中运行
+
 #include <unistd.h>    // 提供 fork(), execvp(), getpid(), getppid()
 #include <sys/wait.h>  // 提供 wait(), waitpid() 以及 WIFEXITED 等宏
 #include <sys/types.h> // 提供 pid_t 类型

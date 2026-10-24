@@ -40,5 +40,6 @@ target_link_libraries(segfault_test PRIVATE libtensor)
 add_executable(benchmark benchmark/benchmark.cpp)
 target_link_libraries(benchmark PRIVATE libtensor)
 
-
+add_executable(thread_gemm system/thread_gemm.cpp)
+target_link_libraries(thread_gemm PRIVATE libtensor)
 
