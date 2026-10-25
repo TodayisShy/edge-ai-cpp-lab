@@ -20,6 +20,7 @@ endif()
 add_library(libtensor STATIC
     src/Matrix.cpp
     src/Tensor.cpp
+    src/ThreadSafeQueue.cpp
 )
 
 # 把 include 设为 PUBLIC 导出：只要链接了 libtensor，自动获得 include 搜索路径！
@@ -43,3 +44,5 @@ target_link_libraries(benchmark PRIVATE libtensor)
 add_executable(thread_gemm system/thread_gemm.cpp)
 target_link_libraries(thread_gemm PRIVATE libtensor)
 
+add_executable(producer_consumer system/producer_consumer.cpp)
+target_link_libraries(producer_consumer PRIVATE libtensor)
