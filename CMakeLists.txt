@@ -46,3 +46,6 @@ target_link_libraries(thread_gemm PRIVATE libtensor)
 
 add_executable(producer_consumer system/producer_consumer.cpp)
 target_link_libraries(producer_consumer PRIVATE libtensor)
+
+add_executable(binary_format_test tests/binary_format_test.cpp)
+target_link_libraries(binary_format_test PRIVATE libtensor)
